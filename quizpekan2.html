@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quiz Pekan ke-2</title>
+</head>
+<body>
+
+	<div id="app">
+		<component :is="currentView"></component>
+<!-- 		<input type="text" v-model="input_baru" v-on:keyup.13="tambah">
+		<button v-on:click="tambah" >Add</button> -->
+		<ul>
+			<li v-for="(keys, user) in users" track-by = "$index">
+				{{user.nama}} 
+				<button v-on:click="edit($index); currentView='edit' ">Edit</button>
+				||
+				<button v-on:click="hapus($index)">Delete</button>
+				<br><br>
+				
+			</li>
+		</ul>
+
+		<template id="add">
+			<input type="text" v-model="input_baru" v-on:keyup.13="tambah()">
+			<button v-on:click="tambah()" >Add</button>
+		</template>
+		<template id="edit">
+			<input type="text" v-model="input_edit" v-on:keyup.13="update()">
+			<button v-on:click="update()" >Update</button>
+		</template>
+
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@1.0.25/dist/vue.js"></script>
+	<script>
+
+		Vue.component('add',{
+			data : function() {
+				return {
+					input_baru : input.input_baru,
+				}
+			},
+			template: '#add',
+			methods : {
+				tambah : function (){
+					console.log(this.input_baru)
+					var temp= {nama : this.input_baru}
+					input.users.push(temp)
+					this.input_baru = ""
+					temp = null
+				},				
+			}
+		})
+
+		Vue.component('edit',{
+			data : function() {
+				return {
+					input_edit : input.input_edit
+				}
+			},
+			template: '#edit',
+			methods : {
+				update : function(){
+					input.users[input.update_index].nama = this.input_edit
+					console.log(this.input_edit)
+					input.update_index = null
+					input.currentView = 'add'
+				}
+			}
+		})
+
+		var input = {
+				 users : [
+					{
+						nama : 'Muhammad Iqbal Mubarok',
+					},
+					{
+						nama : 'Ruby Purwanti',
+					},
+					{
+						nama : 'Faqih Muhammad',
+					},
+				],
+				currentView : 'add',
+				input_baru : '',
+				input_edit : '',
+				update_index : null,
+		}
+
+		var vo = new Vue({
+			el: '#app',
+			data :  input, 
+			methods : {
+				hapus : function(index){
+				   if(confirm("Anda Yakin ?")){
+				   		input.users.splice(index,1)
+				   }					
+				},
+				edit : function(index){
+					// console.log(input.users[index].nama)
+					input.currentView = 'edit'
+					input.input_edit = input.users[index].nama
+					input.update_index = index;
+				}
+			}
+		});		
+
+	</script>
+</body>
+</html>
